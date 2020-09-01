@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/typography.css">
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/default-css.css">
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/styles.css">
+    <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/css_app/view/estilos.css">    
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/responsive.css">
     <!-- modernizr css -->
     <script src="<%out.print(getServletContext().getContextPath());%>/assets/js/vendor/modernizr-2.8.3.min.js"></script>
@@ -79,6 +80,9 @@
                     <div class="card">
                         <div class="card-body">
                             <h6>CATEGORIAS</h6>
+                            <input type="hidden" id="nameFormCategoria" name="nameFormCategoria" value="FrmCategoria">
+                            <input type="hidden" id="actionPageCategoria" name="action" value="paginarCategoria">
+                            <input type="hidden" id="numberPageCategoria" name="numberPageCategoria" value="1">
                             <form id="FrmCategoria">
                                 <div class="row mt-3">
                                     <div class="form-group col-sm-9 col-12">
@@ -88,7 +92,9 @@
                                         <button type="submit" id="btnBuscarCategoria" class="btn btn-primary btn-xs mr-3">
                                             <i class="fa fa-search" aria-hidden="true"></i>
                                         BUSCAR</button>
-                                        <button type="button" id="btnAbrirNCategoria" class="btn btn-primary btn-xs">
+                                        <button type="button" 
+                                                id="btnAbrirNCategoria" 
+                                                class="btn btn-primary btn-xs">
                                             <i class="fa fa-plus-square" aria-hidden="true"></i>
                                         </button>
                                     </div>
@@ -121,7 +127,7 @@
                                 </div>
                                 <div class="col-md-9 col-12">
                                     <nav>
-                                        <ul id="paginatronCategoria" class="pagination pagination-sm justify-content-end">
+                                        <ul id="paginationCategoria" class="pagination pagination-sm justify-content-end">
                                             
                                         </ul>
                                     </nav>
@@ -132,6 +138,37 @@
                 </d>
              </div>
             </div>
+        </div>
+         <!-- Modal -->
+        <div class="modal fade" id="modalCategoria" tabindex="-1" role="dialog" aria-labelledby="Categoria" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="FormCategoriaModal">
+                    <div class="">                
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Categoria</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="txtNombreCategoriaER">NOMBRE</label>
+                                    <input type="text" id="txtNombreCategoriaER" name="txtNombreCategoriaER" class="form-control"/>
+                                    <div class="error-validation" id="validarNombreCategoriaER">Ingrese Categoria</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="txtIdCategoriaER" name="txtIdCategoriaER" value=""/>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary btn-xs" data-dismiss="modal">CERRAR</button>
+                          <button type="submit" class="btn btn-primary btn-xs">GUARDAR</button>
+                        </div>
+                  </div>
+                </form>
+            </div>
+          </div>
         </div>
         <!-- main content area end -->
         <jsp:include page="../footer.jsp" />
@@ -164,6 +201,7 @@
     <!-- others plugins -->
     <script src="<%out.print(getServletContext().getContextPath());%>/assets/js/plugins.js"></script>
     <script src="<%out.print(getServletContext().getContextPath());%>/assets/js/scripts.js"></script>
+    <script src="<%out.print(getServletContext().getContextPath());%>/js_app/app/categoria.js"></script>    
 </body>
 
 </html>

@@ -40,24 +40,27 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         List<Categoria> list = new ArrayList<>();
         PreparedStatement pst;
         ResultSet rs;
-
+        
+        String sql = "select count(idcategoria) from categoria "
+                    + "where nombre like concat('%',?,'%')";
+        
         try {
-            pst = conn.prepareStatement("select count(idcategoria) from categoria where"
-                    + " nombre like concat('%',?,'%')");
-            pst.setString(0, String.valueOf(parameters.get("FILTER")));
-            
-            LOG.info(pst.toString());
-            
+            pst = conn.prepareStatement(sql);
+            pst.setString(1, String.valueOf(parameters.get("FILTER")));
             rs = pst.executeQuery();
             while (rs.next()) {
                 bean_pagination.setCOUNT_FILTER(rs.getInt("COUNT"));
                 if (rs.getInt("COUNT") > 0) {
-                    pst = conn.prepareStatement("SELECT *FROM CATEGORIA WHERE NOMBRE LIKE CONCAT('%',?,'%') "
-                            + " ORDER BY " + String.valueOf(parameters.get("SQL_ORDER_BY")) + " " + String.valueOf(parameters.get("SQL_LIMIT")));
+                    pst = conn.prepareStatement(
+                                  "SELECT *FROM CATEGORIA "
+                                + " WHERE LOWER(NOMBRE) LIKE CONCAT('%',?,'%') "
+                                + " ORDER BY "
+                                + String.valueOf(parameters.get("SQL_ORDER_BY"))
+                                + " " 
+                                + String.valueOf(parameters.get("SQL_LIMIT"))
+                    );
+                    
                     pst.setString(1, String.valueOf(parameters.get("FILTER")));
-                    
-                    LOG.info(pst.toString());
-                    
                     rs = pst.executeQuery();
                     while (rs.next()) {
                         Categoria categoria = new Categoria();
@@ -65,12 +68,18 @@ public class CategoriaDAOImpl implements CategoriaDAO {
                         categoria.setNombre(rs.getString("NOMBRE"));
                         list.add(categoria);
                     }
+                }else{
+                    //LOG.info(sql);
                 }
             }
+            bean_pagination.setLIST(list);
             rs.close();
             pst.close();
-        } catch (SQLException e) {
-
+            
+        } catch (SQLException sqle) {
+            System.out.println("Código de Error: " + sqle.getErrorCode() + "\n" +
+            "SLQState: " + sqle.getSQLState() + "\n" +
+            "Mensaje: " + sqle.getMessage() + "\n");
         }
         return bean_pagination;
     }
@@ -80,6 +89,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         BEAN_PAGINATION bean_pagination = null;
 
         try (Connection conn = this.pool.getConnection()) {
+            //LOG.info(parameters.toString());
             bean_pagination = getPagination(parameters, conn);
         } catch (SQLException e) {
             throw e;
@@ -99,14 +109,14 @@ public class CategoriaDAOImpl implements CategoriaDAO {
             conn.setAutoCommit(false);
             pst = conn.prepareStatement("SELECT COUNT(CATEGORIAID) AS COUNT FROM CATEGORIA WHERE NOMBRE = ?");
             pst.setString(1, obj.getNombre());
-            LOG.info(pst.toString());
+            //LOG.info(pst.toString());
             rs = pst.executeQuery();
             while (rs.next()) {
                 if (rs.getInt("COUNT") == 0) {
                     //realizamos la transaccion
                     pst = conn.prepareStatement("INSERT INTO CATEGORIA(NOMBRE) VALUES(?)");
                     pst.setString(1, obj.getNombre());
-                    LOG.info(pst.toString());
+                    //LOG.info(pst.toString());
                     pst.executeUpdate();
                     conn.commit();
                     bean_crud.setMESSAGE_SERVER("ok");
@@ -145,7 +155,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
                     pst = conn.prepareStatement("UPDATE CATEGORIA SET NOMBRE = ? WHERE IDCATEGORIA = ?");
                     pst.setString(1, obj.getNombre());
                     pst.setInt(2, obj.getIdcategoria());
-                    LOG.info(pst.toString());
+                    //LOG.info(pst.toString());
                     pst.executeUpdate();
                     conn.commit();
                     bean_crud.setMESSAGE_SERVER("ok");

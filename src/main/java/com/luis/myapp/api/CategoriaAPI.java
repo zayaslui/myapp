@@ -61,24 +61,26 @@ public class CategoriaAPI extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            /*try {
-            if ((this.pool.getConnection() != null)) {
-            LOG.info("Conexion Exitosa");
-            } else {
-            LOG.info("Conexion Fallida");
-            }
-            
+            throws ServletException, IOException {        
+            try {
+                if ((this.pool.getConnection() != null)) {
+                    //LOG.info("Conexion Exitosa");
+                } else {
+                    //LOG.info("Conexion Fallida");
+                }            
             } catch (SQLException e) {
-            Logger.getLogger(CategoriaAPI.class.getName()).log(Level.SEVERE, null, e);
-            }*/
+                Logger.getLogger(CategoriaAPI.class.getName()).log(Level.SEVERE, null, e);
+            }
+
+        try {
             this.action = request.getParameter("action") == null ? "" : request.getParameter("action");
+            //LOG.info("action=" + this.action);
             switch(this.action){
                 case "paginarCategoria":
-                    BEAN_PAGINATION bean_pagination = this.categoriaDAO.getPagination(getParameters(request));
-                    BEAN_CRUD bean_crud = new BEAN_CRUD(bean_pagination);
-                    processCategoria(bean_crud, response);
+                    BEAN_PAGINATION beanPagination = this.categoriaDAO.getPagination(getParameters(request));
+                    BEAN_CRUD beanCrud = new BEAN_CRUD(beanPagination);
+                    processCategoria(beanCrud, response);
+                    //processCategoria(new BEAN_CRUD(this.categoriaDAO.getPagination(getParameters(request))), response);
                     break;
                 case "addCategoria":
                     BEAN_CRUD bean_crud1 = this.categoriaDAO.add(getCategoria(request), getParameters(request));
@@ -94,6 +96,7 @@ public class CategoriaAPI extends HttpServlet {
                     processCategoria(bean_crud3, response);                    
                     break;
                 default:
+                    //LOG.info("ningun caso :|");
                     request.getRequestDispatcher("/jsp_app/mantenimiento/categoria.jsp").forward(request, response);
                     break;
             }
@@ -105,8 +108,9 @@ public class CategoriaAPI extends HttpServlet {
     //private void processCategoria(BEAN_CRUD beanCrud,HttpServletRequest request, HttpServletResponse response){
     private void processCategoria(BEAN_CRUD beanCrud, HttpServletResponse response){
         try {
+            //LOG.info(beanCrud.toString());
             this.jsonREsponse = this.jsonParse.toJson(beanCrud);
-            LOG.info(this.jsonREsponse);
+            //LOG.info(this.jsonREsponse);
             response.setContentType("application/json");
             response.getWriter().write(this.jsonREsponse);
         } catch (IOException ex) {
@@ -118,8 +122,15 @@ public class CategoriaAPI extends HttpServlet {
     private HashMap< String, Object> getParameters(HttpServletRequest request){
         this.parameters.clear();
         this.parameters.put("FILTER", request.getParameter("txtNombreCategoria"));
-        this.parameters.put("SQL_ORDER_BY","NOMBRE_ASC");
-        this.parameters.put("SQL_LIMIT"," LIMIT 10 OFSSET 0 "+request.getParameter("sizePageCategoria") + " OFFSET "  +  (Integer.parseInt(request.getParameter("numberPageCategoria")) - 1) * Integer.parseInt(request.getParameter("sizePageCategoria")));
+        this.parameters.put("SQL_ORDER_BY","NOMBRE ASC");
+        this.parameters.put("SQL_LIMIT"," LIMIT " 
+                                +request.getParameter("sizePageCategoria") 
+                                + " OFFSET "  
+                                +  (Integer.parseInt(request.getParameter("numberPageCategoria")) - 1) 
+                                * 
+                                Integer.parseInt(request.getParameter("sizePageCategoria"))
+                            );
+        
         
         return parameters;
     }
