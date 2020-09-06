@@ -135,12 +135,13 @@ public class CategoriaAPI extends HttpServlet {
         return parameters;
     }
     
-    private Categoria getCategoria(HttpServletRequest request){
+    private Categoria getCategoria(HttpServletRequest request) {
         Categoria categoria = new Categoria();
-        if(request.getParameter("action").equals("updateCategoria")){
-            categoria.setIdcategoria(Integer.parseInt("txtIdCategoriaER"));
+        if (request.getParameter("action").equals("updateCategoria")) {
+            categoria.setIdcategoria(Integer.parseInt(request.getParameter("txtIdCategoriaER")));
         }
         categoria.setNombre(request.getParameter("txtNombreCategoriaER"));
+        System.out.println(request.getParameter("txtNombreCategoriaER"));
         return categoria;
     }
 

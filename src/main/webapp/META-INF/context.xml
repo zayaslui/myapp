@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/myapp">
     <Resource name="jdbc/dbmyapp" 
-              auth="Container" 
-              driverClassName="org.postgresql.Driver" 
-              maxActive="10" 
-              maxIdle="10"
-              maxWait="40000"
+              auth="Container"
               type="javax.sql.DataSource"
+              driverClassName="org.postgresql.Driver" 
+              maxActive="300" 
+              maxIdle="10"
+              autoReconnect="true"
+              maxWait="40000"
               url="jdbc:postgresql://localhost:5432/dbmyapp"
               username="postgres"
               password="postgres"
+              removeAbandonedTimeOut="60"
+              removeAbandoned="true"
     >
         
     </Resource>

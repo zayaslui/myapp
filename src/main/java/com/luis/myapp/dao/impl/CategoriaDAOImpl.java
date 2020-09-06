@@ -40,17 +40,22 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         List<Categoria> list = new ArrayList<>();
         PreparedStatement pst;
         ResultSet rs;
+
         
         String sql = "select count(idcategoria) from categoria "
-                    + "where nombre like concat('%',?,'%')";
+                    + "where lower(nombre) like concat('%',?,'%')";
         
         try {
-            pst = conn.prepareStatement(sql);
+            pst = conn.prepareStatement(sql);   
             pst.setString(1, String.valueOf(parameters.get("FILTER")));
             rs = pst.executeQuery();
+            
             while (rs.next()) {
                 bean_pagination.setCOUNT_FILTER(rs.getInt("COUNT"));
                 if (rs.getInt("COUNT") > 0) {
+                    
+                    //System.out.println("entro!!!");
+                    
                     pst = conn.prepareStatement(
                                   "SELECT *FROM CATEGORIA "
                                 + " WHERE LOWER(NOMBRE) LIKE CONCAT('%',?,'%') "
@@ -69,7 +74,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
                         list.add(categoria);
                     }
                 }else{
-                    //LOG.info(sql);
+                    //System.out.println("no entro!!!");
                 }
             }
             bean_pagination.setLIST(list);
@@ -107,7 +112,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
                 SQLClosable finish = conn::rollback; //evitar mandar si se va la luz
                 ) {
             conn.setAutoCommit(false);
-            pst = conn.prepareStatement("SELECT COUNT(CATEGORIAID) AS COUNT FROM CATEGORIA WHERE NOMBRE = ?");
+            pst = conn.prepareStatement("SELECT COUNT(IDCATEGORIA) AS COUNT FROM CATEGORIA WHERE NOMBRE = ?");
             pst.setString(1, obj.getNombre());
             //LOG.info(pst.toString());
             rs = pst.executeQuery();
@@ -116,7 +121,6 @@ public class CategoriaDAOImpl implements CategoriaDAO {
                     //realizamos la transaccion
                     pst = conn.prepareStatement("INSERT INTO CATEGORIA(NOMBRE) VALUES(?)");
                     pst.setString(1, obj.getNombre());
-                    //LOG.info(pst.toString());
                     pst.executeUpdate();
                     conn.commit();
                     bean_crud.setMESSAGE_SERVER("ok");

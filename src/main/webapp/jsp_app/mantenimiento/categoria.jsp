@@ -18,10 +18,12 @@
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/typography.css">
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/default-css.css">
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/styles.css">
-    <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/css_app/view/estilos.css">    
     <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/assets/css/responsive.css">
+    <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/css_app/view/estilos.css">
+    <link rel="stylesheet" href="<%out.print(getServletContext().getContextPath());%>/css_app/view/sweetalert.css">
     <!-- modernizr css -->
     <script src="<%out.print(getServletContext().getContextPath());%>/assets/js/vendor/modernizr-2.8.3.min.js"></script>
+    
 </head>
 
 <body>
@@ -79,9 +81,9 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h6>CATEGORIAS</h6>
+                            <h6 id="nameCrudCategoria">CATEGORIAS</h6>
                             <input type="hidden" id="nameFormCategoria" name="nameFormCategoria" value="FrmCategoria">
-                            <input type="hidden" id="actionPageCategoria" name="action" value="paginarCategoria">
+                            <input type="hidden" id="actionCategoria" name="action" value="paginarCategoria">
                             <input type="hidden" id="numberPageCategoria" name="numberPageCategoria" value="1">
                             <form id="FrmCategoria">
                                 <div class="row mt-3">
@@ -107,7 +109,7 @@
                                             <thead class="bg-primary">
                                                 <tr class="text-white">
                                                     <th>Nombre</th>
-                                                    <th style="width: 15%">Acciones</th>
+                                                    <th style="width: 15%" colspan="2">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tbodyCategoria">
@@ -119,7 +121,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3 col-12">
-                                    <select name="sizePageCategoria" id="sizePageCategoria" class="form-control form-control-sm">
+                                    <select 
+                                        name="sizePageCategoria" 
+                                        id="sizePageCategoria" 
+                                        class="form-control form-control-sm combo-paginar"
+                                        idBtnBuscar='btnBuscarCategoria'>
                                         <option value="10">10</option>
                                         <option value="15">15</option>
                                         <option value="20">20</option>
@@ -140,13 +146,13 @@
             </div>
         </div>
          <!-- Modal -->
-        <div class="modal fade" id="modalCategoria" tabindex="-1" role="dialog" aria-labelledby="Categoria" aria-hidden="true">
+        <div class="modal fade" id="ventanaModalManCategoria" tabindex="-1" role="dialog" aria-labelledby="Categoria" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form id="FormCategoriaModal">
+                <form id="FrmCategoriaModal">
                     <div class="">                
                         <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Categoria</h5>
+                          <h5 class="modal-title" id="tituloModalManCategoria"></h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -170,6 +176,20 @@
             </div>
           </div>
         </div>
+         <!-- Modal progress-->
+            <div class="modal" id="modalCargandoCategoria" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top: 18%; overflow-y: visible;">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="progress" style="margin-bottom: 0px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    Cargando...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <!-- main content area end -->
         <jsp:include page="../footer.jsp" />
     </div>
@@ -201,7 +221,11 @@
     <!-- others plugins -->
     <script src="<%out.print(getServletContext().getContextPath());%>/assets/js/plugins.js"></script>
     <script src="<%out.print(getServletContext().getContextPath());%>/assets/js/scripts.js"></script>
+    <script src="<%out.print(getServletContext().getContextPath());%>/js_app/view/jquery.Pagination.min.js"></script>
+    <script src="<%out.print(getServletContext().getContextPath());%>/js_app/view/sweetalert.min.js"></script>
+    <script src="<%out.print(getServletContext().getContextPath());%>/js_app/app/utilities/Utilities.js"></script>    
     <script src="<%out.print(getServletContext().getContextPath());%>/js_app/app/categoria.js"></script>    
+
 </body>
 
 </html>
